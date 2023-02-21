@@ -7,7 +7,7 @@ package net.tbsoft.fzsclient;
 
 import net.tbsoft.fzsclient.client.FzsProducer;
 import net.tbsoft.fzsclient.client.FzsRecordListener;
-import net.tbsoft.fzsclient.entry.FzsEntry;
+import net.tbsoft.fzsclient.client.entry.FzsEntry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

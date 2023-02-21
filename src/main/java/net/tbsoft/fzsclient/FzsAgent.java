@@ -1,7 +1,7 @@
-package net.tbsoft.fzsclient.fzsagent;
+package net.tbsoft.fzsclient;
 
-import net.tbsoft.fzsclient.fzsagent.config.FzsConfig;
-import net.tbsoft.fzsclient.fzsagent.config.AsmConfig;
+import net.tbsoft.fzsclient.agent.config.FzsConfig;
+import net.tbsoft.fzsclient.agent.config.AsmConfig;
 
 public abstract class FzsAgent {
     protected FzsConfig fzsConfig = new FzsConfig();

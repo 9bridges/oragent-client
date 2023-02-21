@@ -1,7 +1,7 @@
 package net.tbsoft.fzsclient.util;
 
 import lombok.extern.slf4j.Slf4j;
-import net.tbsoft.fzsclient.fzsagent.Response;
+import net.tbsoft.fzsclient.agent.Response;
 import org.apache.http.HttpHost;
 import org.apache.http.HttpRequest;
 import org.apache.http.HttpStatus;

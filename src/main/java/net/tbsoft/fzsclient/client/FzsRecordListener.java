@@ -5,7 +5,7 @@
  */
 package net.tbsoft.fzsclient.client;
 
-import net.tbsoft.fzsclient.entry.FzsEntry;
+import net.tbsoft.fzsclient.client.entry.FzsEntry;
 
 public interface FzsRecordListener {
     void process(FzsEntry lcr);

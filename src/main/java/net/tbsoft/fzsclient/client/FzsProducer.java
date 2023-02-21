@@ -5,9 +5,9 @@
  */
 package net.tbsoft.fzsclient.client;
 
-import net.tbsoft.fzsclient.entry.FzsEntry;
-import net.tbsoft.fzsclient.entry.FzsParser;
-import net.tbsoft.fzsclient.entry.SimpleFzsParser;
+import net.tbsoft.fzsclient.client.entry.FzsEntry;
+import net.tbsoft.fzsclient.client.entry.FzsParser;
+import net.tbsoft.fzsclient.client.entry.SimpleFzsParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

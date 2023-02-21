@@ -1,9 +1,10 @@
-package net.tbsoft.fzsclient.fzsagent;
+package net.tbsoft.fzsclient.agent;
 
 import lombok.extern.slf4j.Slf4j;
-import net.tbsoft.fzsclient.fzsagent.config.AsmConfig;
-import net.tbsoft.fzsclient.fzsagent.config.AsmMode;
-import net.tbsoft.fzsclient.fzsagent.config.FzsConfig;
+import net.tbsoft.fzsclient.FzsAgent;
+import net.tbsoft.fzsclient.agent.config.AsmConfig;
+import net.tbsoft.fzsclient.agent.config.AsmMode;
+import net.tbsoft.fzsclient.agent.config.FzsConfig;
 import net.tbsoft.fzsclient.util.HttpClientUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpHost;

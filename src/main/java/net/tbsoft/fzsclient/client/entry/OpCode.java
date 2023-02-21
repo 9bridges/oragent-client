@@ -1,4 +1,4 @@
-package net.tbsoft.fzsclient.entry;
+package net.tbsoft.fzsclient.client.entry;
 
 public enum OpCode {
     INSERT(0xb2),

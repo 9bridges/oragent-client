@@ -1,4 +1,4 @@
-package net.tbsoft.fzsclient.fzsagent;
+package net.tbsoft.fzsclient.agent;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
