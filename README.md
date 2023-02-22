@@ -1,6 +1,6 @@
 # FZS Client
 
-FZS Client for Java 是 Java 开发者对接 FZS Agent 的最佳途径。以下示例可以帮助 Java 开发者快速上手，并使用 FZS Agent 的全部开放能力。
+FZS Client for Java 是 Java 开发者对接 [FZS](https://github.com/tb-soft/fzs) 的最佳途径。以下示例可以帮助 Java 开发者快速上手，并使用 [FZS](https://github.com/tb-soft/fzs) 的全部开放能力。
 
 ## 添加依赖
 
@@ -18,7 +18,7 @@ FZS Client for Java 是 Java 开发者对接 FZS Agent 的最佳途径。以下�
 
 ### 前置条件
 
-FZS 的增量抽取进程和 web 已经成功启动。
+[FZS](https://github.com/tb-soft/fzs) 的增量抽取进程和 web 已经成功启动。
 
 ### 代码示例
 
