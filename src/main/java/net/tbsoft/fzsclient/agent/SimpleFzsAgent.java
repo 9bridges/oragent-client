@@ -42,19 +42,20 @@ public class SimpleFzsAgent extends FzsAgent {
         export.append("map_use=").append(1).append("\n");
 
         {//fixme 一个map配置
-            if (fzsConfig.getSchemaList() != null) {
-                Arrays.stream(fzsConfig.getSchemaList()).forEach(schema -> {
-                    if (!StringUtils.isEmpty(schema)) {
-                        String[] split = schema.split(",");
-                        Arrays.stream(split).forEach(s -> export.append("map_user=").append(s).append("\n"));
-                    }
-                });
-            }
             if (fzsConfig.getTableList() != null) {
                 Arrays.stream(fzsConfig.getTableList()).forEach(table -> {
+                    //user1.table1,user2.table2,user3.*
+                    //user1.*,user2.*,user3.*
+                    //(?!user1.table1)(?!user2.table2)(^user1.*|^user2.*) fixme 暂时无法处理
                     if (!StringUtils.isEmpty(table)) {
                         String[] split = table.split(",");
-                        Arrays.stream(split).forEach(s -> export.append("map_table=").append(s).append("\n"));
+                        Arrays.stream(split).forEach(s -> {
+                            if (s.trim().endsWith(".*")) {
+                                export.append("map_user=").append(s.split("\\.")[0]).append("\n");
+                            } else {
+                                export.append("map_table=").append(s).append("\n");
+                            }
+                        });
                     }
                 });
             }
