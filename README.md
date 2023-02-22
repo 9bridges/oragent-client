@@ -8,9 +8,9 @@ FZS Client for Java 是 Java 开发者对接 [FZS](https://github.com/tb-soft/fz
 
 ```xml
 <dependency>
-    <groupId>net.tbsoft</groupId>
-    <artifactId>fzsclient</artifactId>
-    <version>1.0-SNAPSHOT</version>
+  <groupId>net.tbsoft</groupId>
+  <artifactId>fzsclient</artifactId>
+  <version>1.0.0</version>
 </dependency>
 ```
 
