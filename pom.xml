@@ -7,6 +7,23 @@
     <groupId>net.tbsoft</groupId>
     <artifactId>fzsclient</artifactId>
     <version>1.0.0</version>
+    <packaging>pom</packaging>
+    <name>fzs-client</name>
+    <description>九桥数据同步工具 FZS 的 Java 客户端</description>
+    <url>https://github.com/tb-soft/fzs-client</url>
+
+    <licenses>
+        <license>
+            <name>The Apache Software License, Version 2.0</name>
+            <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+
+    <organization>
+        <name>TB Soft</name>
+        <url>https://github.com/tb-soft</url>
+    </organization>
 
     <distributionManagement>
         <repository>
@@ -59,4 +76,5 @@
             <version>1.18.24</version>
         </dependency>
     </dependencies>
+    
 </project>
