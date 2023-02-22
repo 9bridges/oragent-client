@@ -1,99 +1,67 @@
-# fzsclient
+# FZS Client
 
-¾ÅÇÅÊı¾İÍ¬²½¹¤¾ß FZS ÏòµÚÈı·½Èí¼ş¼¯³ÉÌá¹©µÄ½Ó¿Ú
-## ±àÒë´ò°ü
+FZS Client for Java æ˜¯ Java å¼€å‘è€…å¯¹æ¥ FZS Agent çš„æœ€ä½³é€”å¾„ã€‚ä»¥ä¸‹ç¤ºä¾‹å¯ä»¥å¸®åŠ© Java å¼€å‘è€…å¿«é€Ÿä¸Šæ‰‹ï¼Œå¹¶ä½¿ç”¨ FZS Agent çš„å…¨éƒ¨å¼€æ”¾èƒ½åŠ›ã€‚
 
-```
-mvn clean package
-```
+## æ·»åŠ ä¾èµ–
 
-´òÍê°üºó£¬jar °üÔÚ target Ä¿Â¼ÏÂ¡£
-## Ê¹ÓÃ·½·¨
-### Ç°ÖÃÌõ¼ş
-FZS µÄÔöÁ¿³éÈ¡½ø³ÌºÍ web ÒÑ¾­³É¹¦Æô¶¯¡£
-### client µ÷ÓÃ·½·¨
-´´½¨ FzsAgent ºÍ FzsClient ¶ÔÏó£¬·Ö±ğÆô¶¯Á½¸öÄ£¿é£¬ÏÂÃæÀı×ÓÖĞÕ¹Ê¾ÈçºÎ´òÓ¡³ö´Ó FZS »ñÈ¡µ½µÄÔöÁ¿ DML ²Ù×÷Êı¾İ
-```
-import net.tbsoft.fzsclient.FzsAgent;
-import net.tbsoft.fzsclient.FzsClient;
-import net.tbsoft.fzsclient.agent.SimpleFzsAgent;
-import net.tbsoft.fzsclient.client.entry.FzsDmlEntry;
+åœ¨ `pom.xml` ä¸­å¼•å…¥ä¾èµ–ï¼š
 
-public class Main {
-    public static void main(String[] args) {
-        int dataPort = 8303;
-        int webPort = 8303;
-        FzsAgent fzsAgent = SimpleFzsAgent.getInstance()
-                .hostname("192.168.31.222") // database host
-                .dbPort(1521) // database port
-                .clientHost("192.168.31.206") //fzs client host
-                .database("lhr11g") // database service name or sid
-                .tableList("fzy.test,fzy.test2") // white table list
-                .username("fzs1") // database user name
-                .password("fzs1") // database password
-                .dataPort(dataPort) // data port
-                .webPort(webPort); // web port
-        fzsAgent.start();
-
-        FzsClient fzsClient = new FzsClient(dataPort);
-        fzsClient.setListener(fzsEntry -> {
-            if (fzsEntry instanceof FzsDmlEntry) {
-                System.out.println(fzsEntry);
-            }
-        });
-        fzsClient.start();
-
-      /*
-        call stop function to stop module
-        fzsClient.stop();
-        fzsAgent.stop();
-       */
-    }
-
-}
-
-```
-pom.xml ÖĞÒıÈëÒÀÀµ
-
-```
+```xml
 <dependency>
     <groupId>net.tbsoft</groupId>
     <artifactId>fzsclient</artifactId>
     <version>1.0-SNAPSHOT</version>
 </dependency>
-<dependency>
-    <groupId>org.slf4j</groupId>
-    <artifactId>slf4j-api</artifactId>
-    <version>1.7.30</version>
-</dependency>
-<dependency>
-    <groupId>dom4j</groupId>
-    <artifactId>dom4j</artifactId>
-    <version>1.6.1</version>
-</dependency>
-<dependency>
-    <groupId>io.netty</groupId>
-    <artifactId>netty-buffer</artifactId>
-    <version>4.1.59.Final</version>
-</dependency>
-<dependency>
-    <groupId>org.apache.commons</groupId>
-    <artifactId>commons-lang3</artifactId>
-    <version>3.3.2</version>
-</dependency>
-<dependency>
-    <groupId>org.apache.httpcomponents</groupId>
-    <artifactId>httpclient</artifactId>
-    <version>4.5.13</version>
-</dependency>
-<dependency>
-    <groupId>commons-codec</groupId>
-    <artifactId>commons-codec</artifactId>
-    <version>1.13</version>
-</dependency>
-<dependency>
-    <groupId>org.projectlombok</groupId>
-    <artifactId>lombok</artifactId>
-    <version>1.18.24</version>
-</dependency>
+```
+
+## ä½¿ç”¨æ–¹æ³•
+
+### å‰ç½®æ¡ä»¶
+
+FZS çš„å¢é‡æŠ½å–è¿›ç¨‹å’Œ web å·²ç»æˆåŠŸå¯åŠ¨ã€‚
+
+### ä»£ç ç¤ºä¾‹
+
+åˆ›å»º `FzsAgent` å’Œ `FzsClient` å¯¹è±¡ï¼Œå¹¶åˆ†åˆ«å¯åŠ¨ä¸¤ä¸ªæ¨¡å—ã€‚
+
+ä»¥ä¸‹ä¾‹å­ä¸­å±•ç¤ºäº†å¦‚ä½•æ‰“å°å‡ºä» FZS è·å–åˆ°çš„ DML æ“ä½œå¢é‡æ•°æ®
+
+```Java
+import net.tbsoft.fzsclient.FzsAgent;
+import net.tbsoft.fzsclient.FzsClient;
+import net.tbsoft.fzsclient.agent.SimpleFzsAgent;
+import net.tbsoft.fzsclient.client.entry.FzsDmlEntry;
+
+public class Example {
+    public static void main(String[] args) {
+        // åˆ›å»ºå¹¶å¯åŠ¨ FzsAgent
+        FzsAgent fzsAgent = SimpleFzsAgent.getInstance()
+            .hostname("192.168.31.222") // database host
+            .dbPort(1521) // database port
+            .clientHost("192.168.31.206") //fzs client host
+            .database("lhr11g") // database service name or sid
+            .tableList("fzy.test,fzy.test2") // white table list
+            .username("fzs1") // database user name
+            .password("fzs1") // database password
+            .dataPort(8304) // data port
+            .webPort(8303); // web port
+        fzsAgent.start();
+
+        // åˆ›å»ºï¼Œå¯åŠ¨ FzsClient å¹¶æŒ‚è½½å¢é‡æ•°æ®ç›‘å¬ï¼š
+        FzsClient fzsClient = new FzsClient(dataPort);
+        fzsClient.setListener(fzsEntry -> {
+            if (fzsEntry instanceof FzsDmlEntry) {
+                // åœ¨è¿™é‡Œè·å– DML å¢é‡
+                System.out.println(fzsEntry);
+            }
+        });
+        fzsClient.start();
+
+        /*
+         * è°ƒç”¨ stop() æ–¹æ³•æ¥åœæ­¢ FzsAgent ä¸ FzsClient
+         * fzsClient.stop();
+         * fzsAgent.stop();
+         */
+    }
+}
 ```
