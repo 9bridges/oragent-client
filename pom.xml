@@ -5,12 +5,11 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>net.tbsoft</groupId>
-    <artifactId>fzsclient</artifactId>
+    <artifactId>oragent-client</artifactId>
     <version>1.0.0</version>
     <packaging>pom</packaging>
-    <name>fzs-client</name>
-    <description>九桥数据同步工具 FZS 的 Java 客户端</description>
-    <url>https://github.com/tb-soft/fzs-client</url>
+    <name>oragent-client</name>
+    <url>https://github.com/tb-soft/oragent-client</url>
 
     <licenses>
         <license>
@@ -29,7 +28,7 @@
         <repository>
             <id>github</id>
             <name>GitHub tb-soft Apache Maven Packages</name>
-            <url>https://maven.pkg.github.com/tb-soft/fzs-client</url>
+            <url>https://maven.pkg.github.com/tb-soft/oragent-client</url>
         </repository>
     </distributionManagement>
 
