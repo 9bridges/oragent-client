@@ -22,45 +22,45 @@ Oragent Client for Java 是 Java 开发者对接 [Oragent](https://github.com/tb
 
 ### 代码示例
 
-创建 `FzsAgent` 和 `FzsClient` 对象，并分别启动两个模块。
+创建 `Oragent` 和 `OragentClient` 对象，并分别启动两个模块。
 
-以下例子中展示了如何打印出从 FZS 获取到的 DML 操作增量数据
+以下例子中展示了如何打印出从 ORAGENT 获取到的 DML 操作增量数据
 
 ```Java
-import net.tbsoft.fzsclient.FzsAgent;
-import net.tbsoft.fzsclient.FzsClient;
-import net.tbsoft.fzsclient.agent.SimpleFzsAgent;
-import net.tbsoft.fzsclient.client.entry.FzsDmlEntry;
+import net.tbsoft.oragentclient.Oragent;
+import net.tbsoft.oragentclient.OragentClient;
+import net.tbsoft.oragentclient.agent.SimpleOragent;
+import net.tbsoft.oragentclient.client.entry.OragentDmlEntry;
 
 public class Example {
     public static void main(String[] args) {
-        // 创建并启动 FzsAgent
-        FzsAgent fzsAgent = SimpleFzsAgent.getInstance()
+        // 创建并启动 Oragent
+        Oragent oragentAgent = SimpleOragent.getInstance()
             .hostname("192.168.31.222") // database host
             .dbPort(1521) // database port
-            .clientHost("192.168.31.206") //fzs client host
+            .clientHost("192.168.31.206") //oragent client host
             .database("lhr11g") // database service name or sid
-            .tableList("fzy.test,fzy.test2") // white table list
-            .username("fzs1") // database user name
-            .password("fzs1") // database password
+            .tableList("test.test,test.test2") // white table list
+            .username("oragent1") // database user name
+            .password("oragent1") // database password
             .dataPort(8304) // data port
             .webPort(8303); // web port
-        fzsAgent.start();
+        oragentAgent.start();
 
-        // 创建，启动 FzsClient 并挂载增量数据监听：
-        FzsClient fzsClient = new FzsClient(dataPort);
-        fzsClient.setListener(fzsEntry -> {
-            if (fzsEntry instanceof FzsDmlEntry) {
+        // 创建，启动 OragentClient 并挂载增量数据监听：
+        OragentClient oragentClient = new OragentClient(dataPort);
+        oragentClient.setListener(oragentEntry -> {
+            if (oragentEntry instanceof OragentDmlEntry) {
                 // 在这里获取 DML 增量
-                System.out.println(fzsEntry);
+                System.out.println(oragentEntry);
             }
         });
-        fzsClient.start();
+        oragentClient.start();
 
         /*
-         * 调用 stop() 方法来停止 FzsAgent 与 FzsClient
-         * fzsClient.stop();
-         * fzsAgent.stop();
+         * 调用 stop() 方法来停止 Oragent 与 OragentClient
+         * oragentClient.stop();
+         * oragentAgent.stop();
          */
     }
 }
