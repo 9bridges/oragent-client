@@ -35,7 +35,7 @@ import net.tbsoft.oragentclient.client.entry.OragentDmlEntry;
 public class Example {
     public static void main(String[] args) {
         // 创建并启动 Oragent
-        Oragent oragentAgent = SimpleOragent.getInstance()
+        Oragent oragent = SimpleOragent.getInstance()
             .hostname("192.168.31.222") // database host
             .dbPort(1521) // database port
             .clientHost("192.168.31.206") //oragent client host
@@ -45,7 +45,7 @@ public class Example {
             .password("oragent1") // database password
             .dataPort(8304) // data port
             .webPort(8303); // web port
-        oragentAgent.start();
+        oragent.start();
 
         // 创建，启动 OragentClient 并挂载增量数据监听：
         OragentClient oragentClient = new OragentClient(dataPort);
@@ -60,7 +60,7 @@ public class Example {
         /*
          * 调用 stop() 方法来停止 Oragent 与 OragentClient
          * oragentClient.stop();
-         * oragentAgent.stop();
+         * oragent.stop();
          */
     }
 }
