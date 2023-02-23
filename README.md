@@ -1,6 +1,6 @@
-# FZS Client
+# Oragent Client
 
-FZS Client for Java 是 Java 开发者对接 [FZS](https://github.com/tb-soft/fzs) 的最佳途径。以下示例可以帮助 Java 开发者快速上手，并使用 [FZS](https://github.com/tb-soft/fzs) 的全部开放能力。
+Oragent Client for Java 是 Java 开发者对接 [Oragent](https://github.com/tb-soft/synjq-web/pkgs/container/oragent) 的最佳途径。以下示例可以帮助 Java 开发者快速上手，并使用 [Oragent](https://github.com/tb-soft/synjq-web/pkgs/container/oragent) 的全部开放能力。
 
 ## 添加依赖
 
@@ -9,7 +9,7 @@ FZS Client for Java 是 Java 开发者对接 [FZS](https://github.com/tb-soft/fz
 ```xml
 <dependency>
   <groupId>net.tbsoft</groupId>
-  <artifactId>fzsclient</artifactId>
+  <artifactId>oragent-client</artifactId>
   <version>1.0.0</version>
 </dependency>
 ```
@@ -18,7 +18,7 @@ FZS Client for Java 是 Java 开发者对接 [FZS](https://github.com/tb-soft/fz
 
 ### 前置条件
 
-[FZS](https://github.com/tb-soft/fzs) 的增量抽取进程和 web 已经成功启动。
+[Oragent](https://github.com/tb-soft/synjq-web/pkgs/container/oragent) 的增量抽取进程和 web 已经成功启动。
 
 ### 代码示例
 
@@ -65,3 +65,9 @@ public class Example {
     }
 }
 ```
+
+## 加入社群
+
+使用 Oragent Client 中有任何问题，进群解惑：
+
+![群二维码](https://image-1302181629.cos.ap-beijing.myqcloud.com/contact_me_qr.png)
