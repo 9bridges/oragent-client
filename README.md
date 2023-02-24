@@ -6,25 +6,13 @@ Oragent Client for Java 是 Java 开发者对接 [Oragent](https://github.com/tb
 
 在 `pom.xml` 中添加：
 
-- `仓库`
-
-  ```xml
-  <repository>
-      <id>github</id>
-      <name>GitHub tb-soft Apache Maven Packages</name>
-      <url>https://maven.pkg.github.com/tb-soft/oragent-client</url>
-  </repository>
-  ```
-
-- `依赖`
-
-  ```xml
-  <dependency>
-      <groupId>net.tbsoft</groupId>
-      <artifactId>oragent-client</artifactId>
-      <version>1.0.0</version>
-  </dependency>
-  ```
+```xml
+<dependency>
+    <groupId>net.tbsoft</groupId>
+    <artifactId>oragent-client</artifactId>
+    <version>1.0.0</version>
+</dependency>
+```
 
 ## 使用方法
 
