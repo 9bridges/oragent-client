@@ -7,7 +7,6 @@
     <groupId>net.tbsoft</groupId>
     <artifactId>oragent-client</artifactId>
     <version>1.0.0</version>
-    <packaging>pom</packaging>
     <name>oragent-client</name>
     <url>https://github.com/tb-soft/oragent-client</url>
 
