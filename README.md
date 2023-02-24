@@ -70,4 +70,4 @@ public class Example {
 
 使用 Oragent Client 中有任何问题，进群解惑：
 
-![群二维码](https://image-1302181629.cos.ap-beijing.myqcloud.com/contact_me_qr.png)
+![群二维码](https://image-1302181629.cos.ap-beijing.myqcloud.com/oragent_group.png)
