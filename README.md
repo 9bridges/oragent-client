@@ -8,9 +8,9 @@ Oragent Client for Java 是 Java 开发者对接 [Oragent](https://github.com/tb
 
 ```xml
 <dependency>
-    <groupId>net.tbsoft</groupId>
+    <groupId>io.github.tb-soft</groupId>
     <artifactId>oragent-client</artifactId>
-    <version>1.0.0</version>
+    <version>1.0.2</version>
 </dependency>
 ```
 
