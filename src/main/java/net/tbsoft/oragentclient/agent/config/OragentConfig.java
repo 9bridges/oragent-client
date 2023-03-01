@@ -17,7 +17,7 @@ public class OragentConfig {
     private Integer webPort;
 
     //fixme 以下默认参数值
-    private int fullCnt = 4;
+    private int fullCnt = 1;
     private int srcId = 1;
     private int tgtId = 2;
 

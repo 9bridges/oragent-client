@@ -62,7 +62,7 @@ public class SimpleOragent extends Oragent {
             export.append("map_full_sync=").append(2047).append("\n");
 
             export.append("map_fix_sync=").append(3).append("\n");
-            export.append("map_must_full_sync=").append(0).append("\n");
+            export.append("map_must_full_sync=").append(1).append("\n");
             export.append("map_if_oragent_text=").append(1).append("\n");
             export.append("map_tgt_not_drop=").append(0).append("\n");
             export.append("map_if_rid_mode=").append(1).append("\n");
