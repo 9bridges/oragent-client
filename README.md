@@ -1,6 +1,6 @@
 # Oragent Client
 
-Oragent Client for Java 是 Java 开发者对接 [Oragent](https://github.com/tb-soft/synjq-web/pkgs/container/oragent) 的最佳途径。以下示例可以帮助 Java 开发者快速上手，并使用 [Oragent](https://github.com/tb-soft/synjq-web/pkgs/container/oragent) 的全部开放能力。
+Oragent Client for Java 是 Java 开发者对接 [Oragent](https://hub.docker.com/r/synjq/oragent) 的最佳途径。以下示例可以帮助 Java 开发者快速上手，并使用 [Oragent](https://hub.docker.com/r/synjq/oragent) 的全部开放能力。
 
 ## 添加依赖
 
@@ -18,7 +18,7 @@ Oragent Client for Java 是 Java 开发者对接 [Oragent](https://github.com/tb
 
 ### 前置条件
 
-[Oragent](https://github.com/tb-soft/synjq-web/pkgs/container/oragent) 的增量抽取进程和 web 已经成功启动。
+[Oragent](https://hub.docker.com/r/synjq/oragent) 的增量抽取进程和 web 已经成功启动。
 
 ### 代码示例
 
