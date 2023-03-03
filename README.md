@@ -10,7 +10,7 @@ Oragent Client for Java 是 Java 开发者对接 [Oragent](https://hub.docker.co
 <dependency>
     <groupId>io.github.tb-soft</groupId>
     <artifactId>oragent-client</artifactId>
-    <version>1.0.2</version>
+    <version>1.0.3</version>
 </dependency>
 ```
 
@@ -46,7 +46,8 @@ public class Example {
             .username("oragent1") // database user name
             .password("oragent1") // database password
             .dataPort(dataPort) // data port
-            .webPort(webPort); // web port
+            .webPort(webPort) // web port
+            .startupMode(StartupMode.LATEST_OFFSET); // 启动方式：1. 增量模式 StartupMode.LATEST_OFFSET 2. 全量+增量模式 StartupMode.INITIAL
         oragent.start();
 
         // 创建，启动 OragentClient 并挂载增量数据监听：
