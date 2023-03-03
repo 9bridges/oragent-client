@@ -2,6 +2,7 @@ package net.tbsoft.oragentclient;
 
 import net.tbsoft.oragentclient.agent.config.OragentConfig;
 import net.tbsoft.oragentclient.agent.config.AsmConfig;
+import net.tbsoft.oragentclient.agent.config.StartupMode;
 
 public abstract class Oragent {
     protected OragentConfig oragentConfig = new OragentConfig();
@@ -64,6 +65,11 @@ public abstract class Oragent {
 
     public Oragent asm(AsmConfig asmConfig) {
         oragentConfig.setAsmConfig(asmConfig);
+        return this;
+    }
+
+    public Oragent startupMode(StartupMode startupMode) {
+        oragentConfig.setStartupMode(startupMode);
         return this;
     }
 }
