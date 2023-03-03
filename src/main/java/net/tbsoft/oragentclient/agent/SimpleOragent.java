@@ -5,6 +5,7 @@ import net.tbsoft.oragentclient.Oragent;
 import net.tbsoft.oragentclient.agent.config.AsmConfig;
 import net.tbsoft.oragentclient.agent.config.AsmMode;
 import net.tbsoft.oragentclient.agent.config.OragentConfig;
+import net.tbsoft.oragentclient.agent.config.StartupMode;
 import net.tbsoft.oragentclient.util.HttpClientUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpHost;
@@ -62,7 +63,16 @@ public class SimpleOragent extends Oragent {
             export.append("map_full_sync=").append(2047).append("\n");
 
             export.append("map_fix_sync=").append(3).append("\n");
-            export.append("map_must_full_sync=").append(1).append("\n");
+            switch (oragentConfig.getStartupMode()) {
+                case INITIAL:
+                    export.append("map_must_full_sync=").append(1).append("\n");
+                    break;
+                case LATEST_OFFSET:
+                default:
+                    export.append("map_must_full_sync=").append(0).append("\n");
+                    break;
+
+            }
             export.append("map_if_oragent_text=").append(1).append("\n");
             export.append("map_tgt_not_drop=").append(0).append("\n");
             export.append("map_if_rid_mode=").append(1).append("\n");
