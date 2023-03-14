@@ -30,6 +30,6 @@ public enum OpCode {
     }
 
     public static OpCode from(int value) {
-        return value < types.length ? types[value] : OpCode.UNSUPPORTED;
+        return (value >= types.length || types[value] == null) ? OpCode.UNSUPPORTED : types[value];
     }
 }
