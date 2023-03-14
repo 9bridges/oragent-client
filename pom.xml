@@ -6,7 +6,7 @@
 
     <groupId>io.github.tb-soft</groupId>
     <artifactId>oragent-client</artifactId>
-    <version>1.0.4-SNAPSHOT</version>
+    <version>1.0.4</version>
     <name>oragent-client</name>
     <description>client for oragent</description>
     <url>https://github.com/tb-soft/oragent-client</url>
