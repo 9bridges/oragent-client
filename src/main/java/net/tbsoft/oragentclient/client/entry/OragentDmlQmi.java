@@ -32,7 +32,6 @@ public class OragentDmlQmi extends OragentDmlEntryImpl {
         setObjectOwner(BytesUtils.getString(byteBuf));
         setObjectName(BytesUtils.getString(byteBuf));
         BytesUtils.getString(byteBuf); // part
-        setSourceTime(Instant.now());
         byteBuf.readerIndex(byteBuf.readerIndex() + 12); // table has pk or uk, scn_time, is_full, if_can_dp, queue_id
         parseColumnValues(byteBuf);
     }

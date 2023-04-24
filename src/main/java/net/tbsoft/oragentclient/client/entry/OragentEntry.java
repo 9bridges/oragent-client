@@ -13,7 +13,7 @@ public interface OragentEntry {
 
     String getObjectOwner();
 
-    Instant getSourceTime();
+    long getSourceTime();
 
     long getScn();
 
@@ -22,6 +22,8 @@ public interface OragentEntry {
     OpCode getEventType();
 
     String getDatabaseName();
+
+    void setSourceTime(long scnTime);
 
     void parse(byte[] data) throws IOException;
 }

@@ -51,7 +51,6 @@ public class OragentDmlIrp extends OragentDmlEntryImpl {
         byteBuf.readerIndex(64);
         setObjectOwner(BytesUtils.getString(byteBuf));
         setObjectName(BytesUtils.getString(byteBuf));
-        setSourceTime(Instant.now());
         byteBuf.readerIndex(byteBuf.readerIndex() + 1); // table has pk or uk
         byteBuf.readerIndex(byteBuf.readerIndex() + 8); // scn_time
         parseColumnValues(byteBuf);
