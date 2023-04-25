@@ -22,7 +22,7 @@ public class OragentConfig {
     private int tgtId = 2;
 
     private int mapId = 1;
-    private StartupMode startupMode = StartupMode.INITIAL;
+    private StartupMode startupMode = StartupMode.LATEST_OFFSET;
 
     public String getSrcLogin() {
         return this.userName + "/" + this.password + "@" + this.hostName + ":" + this.dbPort + "/" + databaseName;

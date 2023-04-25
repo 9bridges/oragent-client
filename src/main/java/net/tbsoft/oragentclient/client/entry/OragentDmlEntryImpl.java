@@ -17,7 +17,7 @@ public abstract class OragentDmlEntryImpl implements OragentDmlEntry {
     private Object[] oldValues = null;
     private String objectOwner = null;
     private String objectName = null;
-    private Instant sourceTime;
+    private long sourceTime;
     private String[] newColumNames;
     private String[] oldColumnNames;
 
@@ -89,7 +89,8 @@ public abstract class OragentDmlEntryImpl implements OragentDmlEntry {
         objectOwner = name;
     }
 
-    public void setSourceTime(Instant var1) {
+    @Override
+    public void setSourceTime(long var1) {
         sourceTime = var1;
     }
 
@@ -112,7 +113,7 @@ public abstract class OragentDmlEntryImpl implements OragentDmlEntry {
     }
 
     @Override
-    public Instant getSourceTime() {
+    public long getSourceTime() {
         return sourceTime;
     }
 

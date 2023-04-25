@@ -10,6 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.*;
@@ -19,6 +20,7 @@ public class SimpleOragentParser implements OragentParser {
     private final int DEFAULT_PARSER_THREAD_COUNT = 8;
     private final ExecutorService parseTheadPool;
     private final ArrayList<Future<List<OragentEntry>>> parseFutures;
+    private static long currentInstant = 0;
 
     public SimpleOragentParser() {
         parseTheadPool = Executors.newFixedThreadPool(DEFAULT_PARSER_THREAD_COUNT);
@@ -35,7 +37,13 @@ public class SimpleOragentParser implements OragentParser {
                 oragentEntries.forEach(oragentEntry -> {
                     try {
                         if (oragentEntry != null) {
-                            outQueue.put(oragentEntry);
+                            if (oragentEntry instanceof OragentTransStart) {
+                                OragentTransStart oragentTransStart = (OragentTransStart) oragentEntry;
+                                currentInstant = oragentTransStart.getSourceTime();
+                            } else {
+                                oragentEntry.setSourceTime(currentInstant);
+                                outQueue.put(oragentEntry);
+                            }
                         }
                     } catch (InterruptedException e) {
                         throw new RuntimeException(e);
@@ -104,6 +112,9 @@ class ParseTask implements Callable<List<OragentEntry>> {
                 break;
             case COMMIT:
                 oragentEntry = new OragentTransCommit();
+                break;
+            case START:
+                oragentEntry = new OragentTransStart();
                 break;
             case DDL: // todo deal ddl
                 /*

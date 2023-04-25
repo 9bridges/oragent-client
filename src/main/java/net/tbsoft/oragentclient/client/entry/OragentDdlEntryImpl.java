@@ -44,7 +44,8 @@ public class OragentDdlEntryImpl implements OragentDdlEntry {
 
     }
 
-    public void setSourceTime(Instant var1) {
+    @Override
+    public void setSourceTime(long var1) {
 
     }
 
@@ -71,8 +72,8 @@ public class OragentDdlEntryImpl implements OragentDdlEntry {
     }
 
     @Override
-    public Instant getSourceTime() {
-        return null;
+    public long getSourceTime() {
+        return -1;
     }
 
     @Override
