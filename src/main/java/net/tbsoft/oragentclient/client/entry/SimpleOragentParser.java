@@ -40,9 +40,10 @@ public class SimpleOragentParser implements OragentParser {
                             if (oragentEntry instanceof OragentTransStart) {
                                 OragentTransStart oragentTransStart = (OragentTransStart) oragentEntry;
                                 currentInstant = oragentTransStart.getSourceTime();
+                            } else {
+                                oragentEntry.setSourceTime(currentInstant);
+                                outQueue.put(oragentEntry);
                             }
-                            oragentEntry.setSourceTime(currentInstant);
-                            outQueue.put(oragentEntry);
                         }
                     } catch (InterruptedException e) {
                         throw new RuntimeException(e);
