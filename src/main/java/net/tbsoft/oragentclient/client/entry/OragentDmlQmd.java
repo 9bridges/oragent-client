@@ -30,6 +30,7 @@ public class OragentDmlQmd extends OragentDmlQmi {
             oragentDmlDrp.setScn(getScn());
             oragentDmlDrp.setTransactionId(getTransactionId());
             oragentDmlDrp.setSourceTime(getSourceTime());
+            oragentDmlDrp.setRowid(objd, dba, slts[i]);
             oragentEntries.add(oragentDmlDrp);
         }
         return oragentEntries;

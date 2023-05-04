@@ -48,6 +48,7 @@ public class OragentDmlIrp extends OragentDmlEntryImpl {
         ByteBuf byteBuf = Unpooled.wrappedBuffer(data, 0, data.length);
         setScn(byteBuf.readerIndex(SCN_OFFSET).readLong());
         setTransactionId(Long.toString(byteBuf.readerIndex(TRANS_ID_OFFSET).readLong()));
+        setRowid(byteBuf);
         byteBuf.readerIndex(64);
         setObjectOwner(BytesUtils.getString(byteBuf));
         setObjectName(BytesUtils.getString(byteBuf));
