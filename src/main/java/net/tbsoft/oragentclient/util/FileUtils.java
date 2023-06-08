@@ -5,23 +5,20 @@ import com.alibaba.fastjson2.JSON;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.util.ArrayList;
-import java.util.List;
 
 public class FileUtils {
-    public static <T> List<T> readObject(String fileName, Class<T> clazz) {
-        List<T> result;
+    public static <T> T readObject(String fileName, Class<T> clazz) {
+
         File file = new File(fileName);
         try {
-            result = JSON.parseArray(Files.readAllBytes(file.toPath()), clazz);
+            return JSON.parseObject(Files.readAllBytes(file.toPath()), clazz);
         } catch (IOException e) {
-            result = new ArrayList<>();
+            return null;
         }
-        return result;
     }
 
-    public static <T> void writeObject(String fileName, List<T> list) throws IOException {
+    public static <T> void writeObject(String fileName, T object) throws IOException {
         File file = new File(fileName);
-        JSON.writeTo(Files.newOutputStream(file.toPath()), list);
+        JSON.writeTo(Files.newOutputStream(file.toPath()), object);
     }
 }
