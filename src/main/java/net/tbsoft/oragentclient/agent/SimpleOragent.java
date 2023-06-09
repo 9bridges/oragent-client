@@ -19,7 +19,6 @@ import java.io.OutputStream;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Slf4j
 public class SimpleOragent extends Oragent {
@@ -84,9 +83,8 @@ public class SimpleOragent extends Oragent {
                 export.append("map_if_rid_mode=").append(1).append("\n");
                 export.append("map_charset_u2g=").append(1).append("\n");
                 export.append("map_index_paral_cnt=").append(8).append("\n");
-                Set<Integer> mapTgtIds = syncConfig.getMapTgtIds();
-                export.append("map_tgt_id=").append(String.join(",", mapTgtIds.stream().map(String::valueOf).collect(Collectors.toSet()))).append("\n\n");
-                allMapTgtIds.addAll(mapTgtIds);
+                export.append("map_tgt_id=").append(syncConfig.getMapTgtId()).append("\n\n");
+                allMapTgtIds.add(syncConfig.getMapTgtId());
             }
         }
         allMapTgtIds.forEach(mapTgtId -> {
@@ -193,41 +191,46 @@ public class SimpleOragent extends Oragent {
     @Override
     public void start() {
         try {
-            //读取文件内容
+            //读取更新缓存文件内容到STORECACHES
             loadStoreCaches();
-
+            //获取相关缓存数据
             List<NodeConfig> nodeConfigs = STORECACHES.getNodeConfig();
             List<SyncConfig> syncConfigs = STORECACHES.getSyncConfigs();
 
-            //复用停止的mapId
+            //获取可以复用的最小mapId
             SyncConfig syncConfig = syncConfigs.stream()
                     .filter(f -> f.getMapUse() == 0)
                     .min(Comparator.comparing(SyncConfig::getMapId))
                     .orElse(null);
-            if (syncConfig != null) {//查找未使用的mapId
-                syncConfig.setMapTables(oragentConfig.getTableList());
-                syncConfig.setMapUse(1);
-                NodeConfig nodeConfig = nodeConfigs.stream()
-                        .filter(f -> f.getMd5Ip().equals(oragentConfig.getClientHost()) &&
-                                f.getMd5Port() == (oragentConfig.getDataPort() + oragentConfig.getDataPortOffset()))
-                        .findFirst().orElse(null);
-                if (nodeConfig==null){
-                    int maxNodeId = nodeConfigs.stream()
-                            .map(NodeConfig::getId)
-                            .max(Comparator.comparing(Integer::intValue)).orElse(1);
-                    nodeConfig=new NodeConfig(maxNodeId+1,oragentConfig.getClientHost(),oragentConfig.getDataPort()+oragentConfig.getDataPortOffset());
-                    nodeConfigs.add(nodeConfig);
-                }
-                oragentConfig.setMapId(syncConfig.getMapId());
-            } else {
+            NodeConfig nodeConfig = nodeConfigs.stream()
+                    .filter(f -> f.getMd5Ip().equals(oragentConfig.getClientHost()) &&
+                            f.getMd5Port() == (oragentConfig.getDataPort() + oragentConfig.getDataPortOffset()))
+                    .findFirst().orElse(null);
+
+            if (nodeConfig == null) {//不存在对应的Tgt Node则新建NodeConfig
+                //获取当前最新的nodeId最大值 新的Node ID为+1
+                int maxNodeId = nodeConfigs.stream()
+                        .map(NodeConfig::getId)
+                        .max(Comparator.comparing(Integer::intValue)).orElse(1);
+                //创建新的NodeConfig 并保存到缓存中
+                nodeConfig = new NodeConfig(maxNodeId + 1, oragentConfig.getClientHost(), oragentConfig.getDataPort() + oragentConfig.getDataPortOffset());
+                nodeConfigs.add(nodeConfig);
+            }
+
+            if (syncConfig == null) {
                 //使用最新的mapId 最大值+1;
                 int maxMapId = syncConfigs.stream()
                         .map(SyncConfig::getMapId)
                         .max(Comparator.comparing(Integer::intValue)).orElse(0);
-                oragentConfig.setMapId(maxMapId+1);
-
-                syncConfigs.add(new SyncConfig(maxMapId+1, 1,null, oragentConfig.getTableList()));
+                syncConfig = new SyncConfig(maxMapId + 1, 1, oragentConfig.getTableList());
+                syncConfigs.add(syncConfig);
+            }else {//处理有可复用的mapId情况
+                syncConfig.setMapTables(oragentConfig.getTableList());
+                syncConfig.setMapUse(1);
             }
+            syncConfig.setMapTgtId(nodeConfig.getId());
+            oragentConfig.setMapId(syncConfig.getMapId());
+            oragentConfig.setMapTgtId(nodeConfig.getId());
             storeStoreCaches();
             //update export.conf
             updateOragentExport(oragentConfig);

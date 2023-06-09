@@ -2,8 +2,6 @@ package net.tbsoft.oragentclient.agent.config;
 
 import lombok.Data;
 
-import java.util.Set;
-
 @Data
 public class OragentConfig {
     private String hostName;
@@ -21,7 +19,7 @@ public class OragentConfig {
 
     private int srcId=1;
     private int mapId;
-    private Set<Integer> mapTgtIds;
+    private int mapTgtId;
     private StartupMode startupMode = StartupMode.LATEST_OFFSET;
 
     public String getSrcLogin() {

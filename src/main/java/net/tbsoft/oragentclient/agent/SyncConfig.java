@@ -3,19 +3,16 @@ package net.tbsoft.oragentclient.agent;
 
 import lombok.Data;
 
-import java.util.Set;
-
 @Data
 public class SyncConfig {
     private Integer mapId;
     private String[] mapTables;
     private Integer mapUse;
-    private Set<Integer> mapTgtIds;
+    private int mapTgtId;
 
-    public SyncConfig(int mapId, int mapUse, Set<Integer> mapTgtIds, String... mapTables) {
+    public SyncConfig(int mapId, int mapUse, String... mapTables) {
         this.mapId = mapId;
         this.mapUse = mapUse;
         this.mapTables = mapTables;
-        this.mapTgtIds = mapTgtIds;
     }
 }
