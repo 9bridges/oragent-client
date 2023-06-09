@@ -53,11 +53,6 @@ public abstract class Oragent {
         return this;
     }
 
-    public Oragent dataPortOffset(int dataPortOffset) {
-        oragentConfig.setDataPortOffset(dataPortOffset);
-        return this;
-    }
-
     public Oragent webPort(int webPort) {
         oragentConfig.setWebPort(webPort);
         return this;

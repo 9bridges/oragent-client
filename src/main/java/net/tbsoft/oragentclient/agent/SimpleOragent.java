@@ -204,7 +204,7 @@ public class SimpleOragent extends Oragent {
                     .orElse(null);
             NodeConfig nodeConfig = nodeConfigs.stream()
                     .filter(f -> f.getMd5Ip().equals(oragentConfig.getClientHost()) &&
-                            f.getMd5Port() == (oragentConfig.getDataPort() + oragentConfig.getDataPortOffset()))
+                            f.getMd5Port() == (oragentConfig.getDataPort()))
                     .findFirst().orElse(null);
 
             if (nodeConfig == null) {//不存在对应的Tgt Node则新建NodeConfig
@@ -213,7 +213,7 @@ public class SimpleOragent extends Oragent {
                         .map(NodeConfig::getId)
                         .max(Comparator.comparing(Integer::intValue)).orElse(1);
                 //创建新的NodeConfig 并保存到缓存中
-                nodeConfig = new NodeConfig(maxNodeId + 1, oragentConfig.getClientHost(), oragentConfig.getDataPort() + oragentConfig.getDataPortOffset());
+                nodeConfig = new NodeConfig(maxNodeId + 1, oragentConfig.getClientHost(), oragentConfig.getDataPort());
                 nodeConfigs.add(nodeConfig);
             }
 

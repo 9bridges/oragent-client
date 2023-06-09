@@ -10,7 +10,6 @@ public class OragentConfig {
     private String userName;
     private String password;
     private Integer dataPort;
-    private Integer dataPortOffset;//并发时端口位移
     private String clientHost;
     private String[] schemaList;
     private String[] tableList;
