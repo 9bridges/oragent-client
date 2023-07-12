@@ -17,6 +17,11 @@ import java.util.List;
 public class OragentDmlQmi extends OragentDmlEntryImpl {
     private int rowCount;
     private Object[][] rowDatas;
+    protected int[] slts;
+    protected long objd, dba;
+
+    public OragentDmlQmi() {
+    }
 
     @Override
     public OpCode getEventType() {
@@ -28,6 +33,8 @@ public class OragentDmlQmi extends OragentDmlEntryImpl {
         ByteBuf byteBuf = Unpooled.wrappedBuffer(data, 0, data.length);
         setScn(byteBuf.readerIndex(SCN_OFFSET).readLong());
         setTransactionId(Long.toString(byteBuf.readerIndex(TRANS_ID_OFFSET).readLong()));
+        objd = byteBuf.readerIndex(DATA_ID_OFFSET).readUnsignedInt();
+        dba = byteBuf.readerIndex(DBA_OFFSET).readUnsignedInt();
         byteBuf.readerIndex(52);
         setObjectOwner(BytesUtils.getString(byteBuf));
         setObjectName(BytesUtils.getString(byteBuf));
@@ -39,8 +46,9 @@ public class OragentDmlQmi extends OragentDmlEntryImpl {
     void parseColumnValues(ByteBuf byteBuf) throws IOException {
         rowCount = byteBuf.readShort();
         rowDatas = new Object[rowCount][];
+        slts = new int[rowCount];
         for (int row = 0; row < rowCount; row++) {
-            BytesUtils.getByteOrShort(byteBuf); // slt
+            slts[row] = BytesUtils.getByteOrShort(byteBuf); // slt
             byteBuf.readerIndex(byteBuf.readerIndex() + 2); // flag, bit_flag
             int columnCount = BytesUtils.getByteOrShort(byteBuf);
             rowDatas[row] = new Object[columnCount];
@@ -89,6 +97,7 @@ public class OragentDmlQmi extends OragentDmlEntryImpl {
             oragentDmlIrp.setScn(getScn());
             oragentDmlIrp.setTransactionId(getTransactionId());
             oragentDmlIrp.setSourceTime(getSourceTime());
+            oragentDmlIrp.setRowid(objd, dba, slts[i]);
             oragentEntries.add(oragentDmlIrp);
         }
         return oragentEntries;

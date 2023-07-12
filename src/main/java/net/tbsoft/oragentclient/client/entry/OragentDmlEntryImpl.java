@@ -5,6 +5,8 @@
  */
 package net.tbsoft.oragentclient.client.entry;
 
+import io.netty.buffer.ByteBuf;
+import net.tbsoft.oragentclient.util.RowidUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -20,6 +22,7 @@ public abstract class OragentDmlEntryImpl implements OragentDmlEntry {
     private long sourceTime;
     private String[] newColumNames;
     private String[] oldColumnNames;
+    private String rowid;
 
     private int[] newColumnTypes;
     private int[] oldColumntypes;
@@ -35,12 +38,17 @@ public abstract class OragentDmlEntryImpl implements OragentDmlEntry {
     protected static final int TRANS_ID_LEN = 8;
     protected static final int OBJECT_PART_ID_LEN = 4;
     protected static final int OBJECT_DATA_ID_LEN = 4;
+    protected static final int DSCN_LEN = 8;
+    protected static final int DBA_LEN = 4;
     protected static final int OP_SIZE_OFFSET = 0;
     protected static final int OP_CODE_OFFSET = OP_SIZE_OFFSET + OP_SIZE_LEN;
     protected static final int OBJECT_ID_OFFSET = OP_CODE_OFFSET + OP_CODE_LEN;
     protected static final int SCN_OFFSET = OBJECT_ID_OFFSET + OBJECT_ID_LEN;
     protected static final int SUB_SCN_OFFSET = SCN_OFFSET + SCN_LEN;
     protected static final int TRANS_ID_OFFSET = SUB_SCN_OFFSET + SUB_SCN_LEN;
+    protected static final int DATA_ID_OFFSET = TRANS_ID_OFFSET + TRANS_ID_LEN + OBJECT_PART_ID_LEN;
+    protected static final int DBA_OFFSET = DATA_ID_OFFSET + OBJECT_DATA_ID_LEN + DSCN_LEN;
+    protected static final int SLT_OFFSET = DBA_OFFSET + DBA_LEN;
 
     public void setOldValues(Object[] var1) {
         oldValues = var1;
@@ -150,6 +158,22 @@ public abstract class OragentDmlEntryImpl implements OragentDmlEntry {
         return oldColumntypes;
     }
 
+    @Override
+    public String getRowid() {
+        return rowid;
+    }
+
+    public void setRowid(ByteBuf byteBuf) {
+        long objd = byteBuf.readerIndex(DATA_ID_OFFSET).readUnsignedInt();
+        long dba = byteBuf.readerIndex(DBA_OFFSET).readUnsignedInt();
+        int slt = byteBuf.readerIndex(SLT_OFFSET).readUnsignedShort();
+        setRowid(objd, dba, slt);
+    }
+
+    public void setRowid(long objd, long dba, int slt) {
+        rowid = RowidUtils.rowidEncode(objd, dba, slt);
+    }
+
     boolean isBinaryLob(int colType) {
         ColumnType columnType = ColumnType.from(colType);
         // Column only define byte val, so if return null, means not bytes type
@@ -221,6 +245,7 @@ public abstract class OragentDmlEntryImpl implements OragentDmlEntry {
     public String toString() {
         return "OragentDmlEntryImpl{" +
                 "eventType=" + getEventType() +
+                ", rowid=" + getRowid() +
                 ", newValues=" + Arrays.toString(newValues) +
                 ", oldValues=" + Arrays.toString(oldValues) +
                 ", objectOwner='" + objectOwner + '\'' +

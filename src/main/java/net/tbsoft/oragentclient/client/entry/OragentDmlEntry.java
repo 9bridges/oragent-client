@@ -18,4 +18,6 @@ public interface OragentDmlEntry extends OragentEntry {
     int[] getNewColumnTypes();
 
     int[] getOldColumntypes();
+
+    String getRowid();
 }
