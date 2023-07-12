@@ -5,7 +5,8 @@ import net.tbsoft.oragentclient.Oragent;
 import net.tbsoft.oragentclient.agent.config.AsmConfig;
 import net.tbsoft.oragentclient.agent.config.AsmMode;
 import net.tbsoft.oragentclient.agent.config.OragentConfig;
-import net.tbsoft.oragentclient.agent.config.StartupMode;
+import net.tbsoft.oragentclient.agent.config.StoreCaches;
+import net.tbsoft.oragentclient.util.FileUtils;
 import net.tbsoft.oragentclient.util.HttpClientUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpHost;
@@ -17,12 +18,18 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.InetSocketAddress;
 import java.net.Socket;
-import java.util.Arrays;
+import java.util.*;
 
 @Slf4j
 public class SimpleOragent extends Oragent {
     private static final SimpleOragent instance = new SimpleOragent();
     private boolean running = false;
+
+    private static final String SYNC_OBJECTS_FILE_PREFIX = "syncObjects_";
+    /**
+     * 主机保存的配置缓存数据
+     */
+    private static StoreCaches STORECACHES;//多个job共用一个SYNC_OBJECTS
 
     private SimpleOragent() {
     }
@@ -34,20 +41,17 @@ public class SimpleOragent extends Oragent {
     public static String buildExportConfig(OragentConfig oragentConfig) {
 
         StringBuilder export = new StringBuilder();
-        export.append("src_id=").append(oragentConfig.getSrcId()).append("\n");
-        export.append("src_full_cnt=").append(oragentConfig.getFullCnt()).append("\n");
+        export.append("src_id=").append("1").append("\n");
+        export.append("src_full_cnt=").append("1").append("\n");
         export.append("src_login=").append(oragentConfig.getSrcLogin()).append("\n");
         export.append("\n");
-
-        export.append("map_id=").append(oragentConfig.getMapId()).append("\n");
-        export.append("map_use=").append(1).append("\n");
-
-        {//fixme 一个map配置
-            if (oragentConfig.getTableList() != null) {
-                Arrays.stream(oragentConfig.getTableList()).forEach(table -> {
-                    //user1.table1,user2.table2,user3.*
-                    //user1.*,user2.*,user3.*
-                    //(?!user1.table1)(?!user2.table2)(^user1.*|^user2.*) fixme 暂时无法处理
+        Set<Integer> allMapTgtIds = new HashSet<>();
+        List<NodeConfig> nodeConfigs = STORECACHES.getNodeConfig();
+        for (SyncConfig syncConfig : STORECACHES.getSyncConfigs()) {
+            if (syncConfig.getMapTables() != null) {
+                export.append("map_id=").append(syncConfig.getMapId()).append("\n");
+                export.append("map_use=").append(syncConfig.getMapUse()).append("\n");
+                Arrays.stream(syncConfig.getMapTables()).forEach(table -> {
                     if (!StringUtils.isEmpty(table)) {
                         String[] split = table.split(",");
                         Arrays.stream(split).forEach(s -> {
@@ -59,34 +63,40 @@ public class SimpleOragent extends Oragent {
                         });
                     }
                 });
-            }
-            export.append("map_full_sync=").append(2047).append("\n");
+                export.append("\n");
 
-            export.append("map_fix_sync=").append(3).append("\n");
-            switch (oragentConfig.getStartupMode()) {
-                case INITIAL:
-                    export.append("map_must_full_sync=").append(1).append("\n");
-                    break;
-                case LATEST_OFFSET:
-                default:
-                    export.append("map_must_full_sync=").append(0).append("\n");
-                    break;
+                export.append("map_full_sync=").append(2047).append("\n");
 
+                export.append("map_fix_sync=").append(3).append("\n");
+                switch (oragentConfig.getStartupMode()) {
+                    case INITIAL:
+                        export.append("map_must_full_sync=").append(1).append("\n");
+                        break;
+                    case LATEST_OFFSET:
+                    default:
+                        export.append("map_must_full_sync=").append(0).append("\n");
+                        break;
+
+                }
+                export.append("map_if_oragent_text=").append(1).append("\n");
+                export.append("map_tgt_not_drop=").append(0).append("\n");
+                export.append("map_if_rid_mode=").append(1).append("\n");
+                export.append("map_charset_u2g=").append(1).append("\n");
+                export.append("map_index_paral_cnt=").append(8).append("\n");
+                export.append("map_tgt_id=").append(syncConfig.getMapTgtId()).append("\n\n");
+                allMapTgtIds.add(syncConfig.getMapTgtId());
             }
-            export.append("map_if_oragent_text=").append(1).append("\n");
-            export.append("map_tgt_not_drop=").append(0).append("\n");
-            export.append("map_if_rid_mode=").append(1).append("\n");
-            export.append("map_charset_u2g=").append(1).append("\n");
-            export.append("map_index_paral_cnt=").append(8).append("\n");
-            export.append("map_tgt_id=").append(oragentConfig.getTgtId()).append("\n\n");
         }
-        //fixme 目标端是否需要
-        export.append("tgt_id=").append(oragentConfig.getTgtId()).append("\n");
-        export.append("tgt_port=").append(oragentConfig.getDataPort()).append("\n");
-        export.append("tgt_md5_port=").append(oragentConfig.getDataPort()).append("\n");
-        export.append("tgt_md5_ip=").append(oragentConfig.getClientHost()).append("\n");//fixme 备端ip
-        export.append("tgt_web_port=").append(oragentConfig.getWebPort()).append("\n\n");//备端web端口
-        //where条件配置
+        allMapTgtIds.forEach(mapTgtId -> {
+            NodeConfig nodeConfig = nodeConfigs.stream().filter(f -> f.getId() == mapTgtId).findFirst().orElse(null);
+            if (nodeConfig != null) {
+                export.append("tgt_id=").append(nodeConfig.getId()).append("\n");
+                export.append("tgt_port=").append(nodeConfig.getPort()).append("\n");
+                export.append("tgt_md5_port=").append(nodeConfig.getMd5Port()).append("\n");
+                export.append("tgt_md5_ip=").append(nodeConfig.getMd5Ip()).append("\n");//fixme 备端ip
+                export.append("tgt_web_port=").append(nodeConfig.getWebPort()).append("\n\n");//备端web端口
+            }
+        });
         export.append("\n");
 
         export.append("param_no_user=").append("\n");
@@ -169,10 +179,10 @@ public class SimpleOragent extends Oragent {
     private static String buildXmlRequestExport(OragentConfig oragentConfig, String content) {
         Element element = new DefaultElement("UpdateConfig");
         element.addAttribute("op", "add")
-                .addAttribute("dataLen", "" + content.getBytes().length)
+                .addAttribute("dataLen", String.valueOf(content.getBytes().length))
                 .addAttribute("type", "export")
-                .addAttribute("mapid", "" + oragentConfig.getMapId())
-                .addAttribute("tgtid", "" + oragentConfig.getSrcId())
+                .addAttribute("mapid", String.valueOf(oragentConfig.getMapId()))
+                .addAttribute("tgtid", String.valueOf(oragentConfig.getSrcId()))
                 .addAttribute("cps", "0")
                 .addAttribute("kafka", "0");
         return element.asXML();
@@ -181,10 +191,52 @@ public class SimpleOragent extends Oragent {
     @Override
     public void start() {
         try {
+            //读取更新缓存文件内容到STORECACHES
+            loadStoreCaches();
+            //获取相关缓存数据
+            List<NodeConfig> nodeConfigs = STORECACHES.getNodeConfig();
+            List<SyncConfig> syncConfigs = STORECACHES.getSyncConfigs();
+
+            //获取可以复用的最小mapId
+            SyncConfig syncConfig = syncConfigs.stream()
+                    .filter(f -> f.getMapUse() == 0)
+                    .min(Comparator.comparing(SyncConfig::getMapId))
+                    .orElse(null);
+            NodeConfig nodeConfig = nodeConfigs.stream()
+                    .filter(f -> f.getMd5Ip().equals(oragentConfig.getClientHost()) &&
+                            f.getMd5Port() == (oragentConfig.getDataPort()))
+                    .findFirst().orElse(null);
+
+            if (nodeConfig == null) {//不存在对应的Tgt Node则新建NodeConfig
+                //获取当前最新的nodeId最大值 新的Node ID为+1
+                int maxNodeId = nodeConfigs.stream()
+                        .map(NodeConfig::getId)
+                        .max(Comparator.comparing(Integer::intValue)).orElse(1);
+                //创建新的NodeConfig 并保存到缓存中
+                nodeConfig = new NodeConfig(maxNodeId + 1, oragentConfig.getClientHost(), oragentConfig.getDataPort());
+                nodeConfigs.add(nodeConfig);
+            }
+
+            if (syncConfig == null) {
+                //使用最新的mapId 最大值+1;
+                int maxMapId = syncConfigs.stream()
+                        .map(SyncConfig::getMapId)
+                        .max(Comparator.comparing(Integer::intValue)).orElse(0);
+                syncConfig = new SyncConfig(maxMapId + 1, 1, oragentConfig.getTableList());
+                syncConfigs.add(syncConfig);
+            }else {//处理有可复用的mapId情况
+                syncConfig.setMapTables(oragentConfig.getTableList());
+                syncConfig.setMapUse(1);
+            }
+            syncConfig.setMapTgtId(nodeConfig.getId());
+            oragentConfig.setMapId(syncConfig.getMapId());
+            oragentConfig.setMapTgtId(nodeConfig.getId());
+            storeStoreCaches();
             //update export.conf
             updateOragentExport(oragentConfig);
             //启动oragent源端
-            Response<byte[]> response = HttpClientUtils.httpRequestGetOragentFull(new HttpHost(oragentConfig.getHostName(), oragentConfig.getWebPort()), oragentConfig.getMapId());
+            Response<byte[]> response = HttpClientUtils.httpRequestGetOragentFull(
+                    new HttpHost(oragentConfig.getHostName(), oragentConfig.getWebPort()), oragentConfig.getMapId());
             if (response.getCode() != 0) {
                 log.error("start oragent:{}", response.getMsg());
             } else {
@@ -197,11 +249,44 @@ public class SimpleOragent extends Oragent {
 
     }
 
+    private String getCacheFileKey() {
+        return SYNC_OBJECTS_FILE_PREFIX
+                + this.oragentConfig.getHostName() + "_"
+                + this.oragentConfig.getWebPort() + ".json";
+    }
+
+    private synchronized void storeStoreCaches() {
+        try {
+            FileUtils.writeObject(getCacheFileKey(), STORECACHES);
+        } catch (IOException ignored) {
+        }
+    }
+
+    private synchronized void loadStoreCaches() {
+        STORECACHES = FileUtils.readObject(getCacheFileKey(), StoreCaches.class);
+        if (STORECACHES == null) {
+            STORECACHES = new StoreCaches();
+            STORECACHES.setSyncConfigs(new ArrayList<>());
+            STORECACHES.setNodeConfig(new ArrayList<>());
+        } else {
+            if (STORECACHES.getSyncConfigs() == null) {
+                STORECACHES.setSyncConfigs(new ArrayList<>());
+            }
+            if (STORECACHES.getNodeConfig() == null) {
+                STORECACHES.setNodeConfig(new ArrayList<>());
+            }
+        }
+    }
+
     @Override
     public void stop() {
         if (!isRunning()) {
             try {
                 //停止oragent源端
+                List<SyncConfig> syncConfigs = STORECACHES.getSyncConfigs();
+                syncConfigs.stream().filter(f -> f.getMapId() == oragentConfig.getMapId()).findFirst().ifPresent(syncObject -> syncObject.setMapUse(0));
+                storeStoreCaches();
+
                 Response<byte[]> response = HttpClientUtils.httpRequestGetOragentStop(new HttpHost(oragentConfig.getHostName(), oragentConfig.getWebPort()), oragentConfig.getMapId());
                 if (response.getCode() != 0) {
                     log.error("stop oragent:{}", response.getMsg());
